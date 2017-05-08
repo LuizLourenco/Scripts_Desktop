@@ -8,15 +8,16 @@
 Option Explicit 
 Dim strComputer, objWMIService, colOperatingSystems, objOperatingSystem, WindowsVersionName, oShell, TextPrompt, TextTitle
 
-
+'----------------------------------------------------------------------------
 ' Set text of variables to can show
+'----------------------------------------------------------------------------
 TextTitle  = "Internet Proxy"  
 TextPrompt = "Caro usu"&ChrW(0225)&"rio," & vbNewLine & _
-             "Voc"&ChrW(0234)&" deseja acessar a Internet na rede DHL ou usando a Cisco VPN?" & vbNewLine & _
+             "Voc"&ChrW(0234)&" deseja acessar a Internet na rede da empresa ou usando a Cisco VPN?" & vbNewLine & _
              "Se afirmativo, clique em Yes" & vbNewLine & vbNewLine & _
              "-----------------------" & vbNewLine & vbNewLine & _
              "Dear User," & vbNewLine & _
-             "Would you like to access the internet within the DHL network or using the Cisco VPN?" & vbNewLine & _
+             "Would you like to access the internet within the company network or using the Cisco VPN?" & vbNewLine & _
              "If so, please click the Yes button"
 
 ' Set variables as object to Wscript.Shell
@@ -32,17 +33,15 @@ GetOSName() 'Get of Operating System which who version that is running.
 If MsgBox(TextPrompt, vbQuestion or vbYesNo,TextTitle) = vbYes then
     If (WindowsVersionName = "Windows 7") Then
         Wscript.echo "Voce esta usando Microsoft Windows 7 Enterprise"
-        SetScriptProxy("http://localhost/proxy.pac")
+        SetScriptProxy("http://MyProxy_A/proxy.pac")
     End If
     If (WindowsVersionName = "Windows 10") Then
         Wscript.echo "Voce esta usando Microsoft Windows 10 Enterprise"
-        SetScriptProxy("http://localhost/proxy.pac")
+        SetScriptProxy("http://MyProxy_B/proxy.pac")
     End If
 Else
     DropScriptProxy()
 End If
-
-
 
 '----------------------------------------------------------------------------
 'SubRoutine to get of Operating System which who version that is running.
@@ -53,17 +52,14 @@ Sub GetOSName()
     Set colOperatingSystems = objWMIService.ExecQuery ("Select * from Win32_OperatingSystem") 
     For Each objOperatingSystem in colOperatingSystems 
     Select Case Trim(objOperatingSystem.Caption)
-        Case "Microsoft Windows 7 Enterprise" ' My version
-            'wsh.echo "Voce esta usando Microsoft Windows 7 Enterprise"
+        Case "Microsoft Windows 7 Enterprise" 
             WindowsVersionName = "Windows 7"
 
-        Case "Microsoft Windows 10 Enterprise" ' My version
-            'wsh.echo "Voce esta usando Microsoft Windows 10 Enterprise" 
+        Case "Microsoft Windows 10 Enterprise" 
             WindowsVersionName = "Windows 10"
     End Select 
     Next
 End Sub
-
 
 '----------------------------------------------------------------------------
 'SubRoutine to set the proxy address
